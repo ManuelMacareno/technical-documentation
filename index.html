@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical Documentation</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main id="main-doc">
+
+        <nav id="navbar">
+            <header>API DOC</header>
+            <a class="nav-link" href="#API_Documentation_Overview">API Documentation Overview</a>
+            <a class="nav-link" href="#Authentication_and_Authorization">Authentication and Authorization</a>
+            <a class="nav-link" href="#Error_Handling">Error Handling</a>
+            <a class="nav-link" href="#Pagination_and_Filtering">Pagination and Filtering</a>
+            <a class="nav-link" href="#Rate_Limiting">Rate Limiting</a>
+        </nav>
+
+        <section class="main-section" id="API_Documentation_Overview">
+            <header>
+                <h1>API Documentation Overview</h1>
+            </header>
+
+            <p>This section provides an overview of how to interact with the API. The API supports both GET and POST
+                requests for different endpoints.</p>
+
+            <p>To make a GET request, use the following format:</p>
+            <p><code>GET /api/v1/resource</code></p>
+
+            <p>The response will be in JSON format. Below is an example of a typical response:</p>
+            <p><code>{ "id": 1, "name": "example" }</code></p>
+
+            <p>For POST requests, ensure that the body contains valid JSON. Here is an example of a POST request:</p>
+            <p><code>POST /api/v1/resource</code></p>
+
+            <p>With a request body similar to the following:</p>
+            <p><code>{ "name": "new item", "description": "This is a new item." }</code></p>
+
+            <p>The following are some of the key operations available in the API:</p>
+            <ul>
+                <li><code>GET /api/v1/resource</code> - Retrieve a list of resources</li>
+                <li><code>POST /api/v1/resource</code> - Create a new resource</li>
+                <li><code>PUT /api/v1/resource/:id</code> - Update an existing resource</li>
+                <li><code>DELETE /api/v1/resource/:id</code> - Delete a resource</li>
+                <li>Authentication required for POST, PUT, and DELETE requests</li>
+            </ul>
+
+            <p>Be sure to include the correct headers in your request:</p>
+            <p><code>Content-Type: application/json</code></p>
+
+            <p>Now that you have an overview of the API operations, you can begin implementing these into your
+                application.</p>
+        </section>
+
+        <section class="main-section" id="Authentication_and_Authorization">
+            <header>
+                <h1>Authentication and Authorization</h1>
+            </header>
+
+            <p>To authenticate your requests, you need to include an access token in the headers of your API calls.</p>
+
+            <p>An example of a request with an access token looks like this:</p>
+            <p><code>Authorization: Bearer your-access-token</code></p>
+
+            <p>The following endpoints require authentication:</p>
+            <ul>
+                <li><code>GET /api/v1/users</code> - Fetch user data</li>
+                <li><code>POST /api/v1/users</code> - Create a new user</li>
+                <li><code>PUT /api/v1/users/:id</code> - Update user information</li>
+                <li><code>DELETE /api/v1/users/:id</code> - Remove a user</li>
+                <li>Token expiry details can be checked in the response headers</li>
+            </ul>
+
+            <p>To generate an access token, use the following endpoint:</p>
+            <p><code>POST /api/v1/auth/login</code></p>
+
+            <p>Ensure that you provide a valid username and password in the request body:</p>
+            <p><code>{ "username": "user", "password": "pass" }</code></p>
+
+            <p>If the credentials are valid, you will receive a token that you can use for subsequent requests.</p>
+
+            <p>Here is how you can refresh your token when it expires:</p>
+            <p><code>POST /api/v1/auth/refresh</code></p>
+
+            <p>Be sure to handle expired tokens by catching the correct response code from the server.</p>
+        </section>
+
+
+        <section class="main-section" id="Error_Handling">
+            <header>
+                <h1>Error Handling</h1>
+            </header>
+
+            <p>Our API returns a variety of error codes depending on the situation. Understanding these is crucial for
+                debugging and ensuring smooth operation of your application.</p>
+
+            <p>The most common error codes are as follows:</p>
+            <ul>
+                <li><code>400 Bad Request</code> - The server could not understand the request.</li>
+                <li><code>401 Unauthorized</code> - The request requires authentication.</li>
+                <li><code>403 Forbidden</code> - You don’t have permission to access the resource.</li>
+                <li><code>404 Not Found</code> - The requested resource could not be found.</li>
+                <li><code>500 Internal Server Error</code> - The server encountered an unexpected condition.</li>
+            </ul>
+
+            <p>For example, a missing required field will return a <code>400 Bad Request</code>:</p>
+            <p><code>{ "error": "Missing required field 'email'" }</code></p>
+
+            <p>In the case of an expired token, you will receive a <code>401 Unauthorized</code> error:</p>
+            <p><code>{ "error": "Token expired" }</code></p>
+
+            <p>Ensure that your application handles these errors gracefully by checking the status codes of the
+                responses.</p>
+
+            <p>Here's an example of how you can catch and handle errors in your code:</p>
+            <p><code>if (response.status !== 200) { // handle error }</code></p>
+
+            <p>Following proper error handling practices will make your application more reliable and user-friendly.</p>
+        </section>
+
+        <section class="main-section" id="Pagination_and_Filtering">
+            <header>
+                <h1>Pagination and Filtering</h1>
+            </header>
+
+            <p>Our API supports pagination to handle large datasets efficiently. You can specify the number of items to
+                return and the page you want to retrieve.</p>
+
+            <p>An example request for paginated data looks like this:</p>
+            <p><code>GET /api/v1/items?page=2&limit=20</code></p>
+
+            <p>The response will include a <code>total</code> count of items, as well as the <code>page</code> and
+                <code>limit</code> you requested:
+            </p>
+            <p><code>{ "page": 2, "limit": 20, "total": 100 }</code></p>
+
+            <p>You can also filter the data by adding query parameters:</p>
+            <ul>
+                <li><code>?name=example</code> - Filters items by name</li>
+                <li><code>?category=electronics</code> - Filters items by category</li>
+                <li><code>?price[gte]=100</code> - Filters items with price greater than or equal to 100</li>
+                <li><code>?price[lte]=500</code> - Filters items with price less than or equal to 500</li>
+                <li><code>?sort=price</code> - Sorts the items by price</li>
+            </ul>
+
+            <p>An example of a complex filter request could be:</p>
+            <p><code>GET /api/v1/items?category=books&price[gte]=10&sort=name</code></p>
+
+            <p>Pagination and filtering help improve performance and allow you to retrieve just the data you need.</p>
+
+            <p>Make sure to implement pagination and filtering on the client side for optimal user experience.</p>
+        </section>
+
+        <section class="main-section" id="Rate_Limiting">
+            <header>
+                <h1>Rate Limiting</h1>
+            </header>
+
+            <p>To prevent abuse, our API enforces rate limiting. This limits the number of requests a client can make
+                within a specific time window.</p>
+
+            <p>For most endpoints, the rate limit is set to 100 requests per minute.</p>
+
+            <p>If you exceed the rate limit, the API will return a <code>429 Too Many Requests</code> status code.</p>
+
+            <p>The response will also include a <code>Retry-After</code> header, which indicates how long you need to
+                wait before making another request:</p>
+            <p><code>Retry-After: 60</code></p>
+
+            <p>Here is an example of how a rate-limited response might look:</p>
+            <p><code>{ "error": "Rate limit exceeded, please wait 60 seconds" }</code></p>
+
+            <p>To avoid hitting rate limits, it is recommended to implement a retry mechanism with exponential backoff
+                in
+                your client.</p>
+
+            <ul>
+                <li>Check the <code>Retry-After</code> header</li>
+                <li>Wait the indicated time before retrying</li>
+                <li>Reduce the frequency of requests</li>
+                <li>Implement request batching where possible</li>
+                <li>Monitor the response status codes to adjust your rate</li>
+            </ul>
+
+            <p>Adhering to rate limits ensures fair use of the API and helps maintain server performance.</p>
+
+            <p>For more information on rate limits and quotas, refer to our detailed documentation on the limits for
+                each API plan.</p>
+        </section>
+
+
+    </main>
+</body>
+
+</html>
